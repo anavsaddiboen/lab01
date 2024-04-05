@@ -40,15 +40,15 @@ int main(int argc, char *argv[]) {
 
   // Read file
 
-    reta_1.inicio.x = -20;
-    reta_1.inicio.y = -20;
-    reta_1.fim.x = 50;
-    reta_1.fim.y = 60;     // a parte do verifica intersecco esta bagunçada precisa printar melhor tambem quando sao coincidentes
+    reta_1.inicio.x = 0;
+    reta_1.inicio.y = 50;
+    reta_1.fim.x = 100;
+    reta_1.fim.y = 50;     // a parte do verifica intersecco esta bagunçada precisa printar melhor tambem quando sao coincidentes
     
-    reta_2.inicio.x = -30;
-    reta_2.inicio.y = -20; 
+    reta_2.inicio.x = 30;
+    reta_2.inicio.y = 50; 
     reta_2.fim.x = 50;
-    reta_2.fim.y = 30;
+    reta_2.fim.y = 50;
 
   int largura = 100, altura = 100;
   int **matriz = CriaMatriz(altura, largura);
@@ -86,44 +86,25 @@ int main(int argc, char *argv[]) {
 }
 
 int VerificaInterseccao(Reta reta_1, Reta reta_2, Ponto *interseccao) {
-    if (reta_1.inicio.x == reta_1.fim.x && reta_2.inicio.x == reta_2.fim.x) {
-        // Caso em que ambas as retas são verticais e paralelas
-        if (reta_1.inicio.x == reta_2.inicio.x) {
-            if (reta_1.inicio.y >= reta_2.inicio.y && reta_1.inicio.y <= reta_2.fim.y) {
-                *interseccao = reta_1.inicio;
-                return 1; // Retas concorrentes
-            } else if (reta_2.inicio.y >= reta_1.inicio.y && reta_2.inicio.y <= reta_1.fim.y) {
-                *interseccao = reta_2.inicio;
-                return 1; // Retas concorrentes
-            } else {
-                return 0; // Retas paralelas e não se interceptam
-            }
-        } else {
-            return 0; // Retas paralelas e não se interceptam
-        }
-    } else if (reta_1.inicio.x == reta_1.fim.x) {
-        // Calcula a coordenada x da interseção usando a equação da reta vertical
-        interseccao->x = reta_1.inicio.x;
-        // Calcula a coordenada y da interseção usando a equação da reta 2
-        interseccao->y = reta_2.coeficiente_angular * interseccao->x + reta_2.coeficiente_linear;
-        return 1; // Retas concorrentes
-    }
-    // Verifica se a reta_2 é vertical
-    else if (reta_2.inicio.x == reta_2.fim.x) {
-        // Calcula a coordenada x da interseção usando a equação da reta vertical
-        interseccao->x = reta_2.inicio.x;
-        // Calcula a coordenada y da interseção usando a equação da reta 1
-        interseccao->y = reta_1.coeficiente_angular * interseccao->x + reta_1.coeficiente_linear;
-        return 1; // Retas concorrentes
-    }
-    // Caso geral
-    else {
-        // Calcula as coordenadas x e y da interseção usando a equação das retas
-        float interx = ((reta_2.coeficiente_linear - reta_1.coeficiente_linear) / (reta_1.coeficiente_angular - reta_2.coeficiente_angular));
-        float intery = (reta_1.coeficiente_angular * interx) + reta_1.coeficiente_linear;
-        interseccao->x = (int)(interx);
-        interseccao->y = (int)(intery);
-        return 1; // Retas concorrentes
+    if (reta_1.coeficiente_angular == reta_2.coeficiente_angular) {
+      if (reta_1.coeficiente_linear == reta_2.coeficiente_linear) {
+        return 2;
+      } else if (reta_1.coeficiente_linear != reta_2.coeficiente_linear){
+        return 0;
+      }
+    } else if ( reta_1.coeficiente_angular != reta_2.coeficiente_angular) {
+      if (reta_1.coeficiente_linear != reta_2.coeficiente_linear) {
+        float pontox = ((reta_2.coeficiente_linear-reta_1.coeficiente_linear)/(reta_1.coeficiente_angular - reta_2.coeficiente_angular));
+        float pontoy = ((reta_1.coeficiente_angular * pontox) + reta_1.coeficiente_linear);
+        int interx = pontox;
+        int intery = pontoy;
+        interseccao->x = interx;
+        interseccao->y = intery;
+
+        return 1;
+      } else {
+        printf("COEFICIENTE ANGULAR DIFERENTE E LINEAR IGUAL");
+      }
     }
 }
 
